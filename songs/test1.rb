@@ -8,14 +8,14 @@ require "unimidi"
 include CallendinaConstants #so I,II,IV etc works
 
 song=Callendina.new do
-	bpm 120
+	
 	key "Gm"
 	key "Ab4"
 	key "C#4M"
 	key "C4"
 	
 
-	bass=Instrument.new {
+	bass=Riffer.new {
 		channel 8
 	}
 
@@ -50,16 +50,15 @@ song=Callendina.new do
 	pad=Pad.new 
 	
 	part(:intro) {
-		bpm 120
 		key "Am"
 		chords [I,V,IV,VII] 
-		instruments [pad,drums]
+		instruments [pad,drums-[clave]]
 	}
 	
 	
 	part(:chorus) {
-		chords [I,II,III,IV] 
-		instruments [bass,drums-[clave],pad]
+		chords [I,III,V,IV] 
+		instruments [bass,drums,pad]
 
 	}
 
@@ -67,16 +66,13 @@ song=Callendina.new do
 end
 
 
-	if (UniMIDI::Output.all.length)>1 then
-		output = UniMIDI::Output.gets
-	else
-		output = UniMIDI::Output.all.first
-	end
 
+	internal_clock=InternalClock.new(120)
+	clock=MidiClock.new()
 song.dump
 
-song.play(output) {
-		intro (4.bars)		
-		chorus (16.bars)	
+song.play(clock) {
+#		intro (4.bars)		
+		chorus (1016.bars)	
 }
 
